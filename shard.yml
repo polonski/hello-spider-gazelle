@@ -17,6 +17,10 @@ dependencies:
   kilt:
     github: jeromegn/kilt
 
+  clear:
+    github: anykeyh/clear
+    branch: master
+    
 development_dependencies:
   ameba:
     github: veelenga/ameba
