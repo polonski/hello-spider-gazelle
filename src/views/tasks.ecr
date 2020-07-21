@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>To Do Tasks</title>
+    <title><%= tasks_title %>></title>
     <link rel="shortcut icon" href="favicon.ico"/>
 </head>
 <body style="text-align: center">
     <img src="sg.png" alt="Spider-Gazelle" />
-    <br />
+    
     <%= tasks_title %>
+    <br/>
+    
+    <form action="/tasks/new" method="GET">
+        <input type="submit" value="CREATE NEW TODO">
+    </form>
+    <br/>
+
+    <table style="border: 1px solid black;">
+        <tr style="border: 1px solid black;" align="center">
+            <td>ID</td><td>NAME</td><td>DESCRIPTION</td><td>ACTION</td>
+        </tr> 
+       <%- all_tasks.each do |task| -%>  
+       <tr style="border: 1px solid black;" align="left" >
+            <td><%= task.id %></td><td><%= task.name %></td><td><%= task.description %></td>
+            <td><form action="/tasks/<%= task.id %>" method="DELETE"><input type="submit" value="DELETE"></form>
+            <form action="/tasks/<%= task.id %>" method="PATCH"><input type="submit" value="DONE"></form></td>
+        </tr> 
+        <%- end -%>
+    </table>
+    
 </body>
 </html>

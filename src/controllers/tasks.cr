@@ -1,43 +1,86 @@
-require "xml"
+require "clear"
 
 class Tasks < Application
 
   base "/tasks"
-
+  
   def index
-   
-    tasks_title = "TODOer"
-    Log.warn { "WARN: tasks" }
-    Log.debug { "DEBUG: tasks index" }
-    
- 
-    respond_with do
-      
-      #html template("tasks.ecr")
-      
-      #text "The #{tasks_title} app"
-      
-      json({title: tasks_title})
-      
-      xml do
-        XML.build(indent: "  ") do |xml|
-          xml.element("body") { xml.text tasks_title }
-        end
-      end
+     
+    Log.debug { "GET /tasks" }
+
+    tasks_title = "TO-DO-er"
+    all_tasks = Task.query.to_a
+   Log.debug { all_tasks.inspect }
+
+    respond_with do     
+      html template("tasks.ecr")
     end
+
   end
 
+
+  def new
+   
+    Log.debug { "GET /tasks/new" }
+
+    respond_with do
+      html template("new_task.ecr")
+    end
+
+    # Clear::Migration::Manager.instance.apply_all
+
+  end
 
   def create
       
-      Log.debug { "DEBUG: tasks create" }
-      # apply all mirations from db/migrations
-      Clear::Migration::Manager.instance.apply_all
+      Log.debug { "GET /tasks#create" }
+
+      #t = Task.new({name: "#{params["name"]}" })
+      #t.description = "#{params["description"]}"
+      #t.done = false
+      #t.save!
+
+
+      #begin
+          Task.new({name: "#{params["name"]}", description: "#{params["description"]}", done: false  }).save!
+      #rescue e
+      #   respond_with do 
+      #       json({error: "could not create new task. Message: #{e.message}"})
+      #    end
+      #else
+
+          respond_with do 
+             json({response: "new task created"})
+          end
+  
+      #end
+
   
   end
 
-  def show; end
+  def destroy
 
+      Log.debug { "DELETE /tasks/:id" }
+
+      #Task.query.execute("DELETE FROM tasks WHERE tasks.id=#{params["id"]};")
+
+      respond_with do 
+        json({deleted_task: params["id"]})
+      end
+
+  end
+
+  def update
+
+      Log.debug { "PATCH /tasks/:id" }
+
+      #Task.query.execute("UPDATE tasks  tasks.id=#{params["id"]};")
+
+      respond_with do 
+        json({updated_task: params["id"]})
+      end
+      
+  end
 
 
 end
