@@ -7,7 +7,7 @@ class Task
         Log.debug { "DEBUG: migrations direction: #{dir}" }
             
             
-        execute("CREATE TABLE tasks ( id serial NOT NULL PRIMARY KEY, name TEXT NOT NULL, description TEXT, done BOOLEAN);")
+        #execute("CREATE TABLE tasks ( id serial NOT NULL PRIMARY KEY, name TEXT NOT NULL, description TEXT, done BOOLEAN);")
 
         #   create_table(:tasks) do |t|
            

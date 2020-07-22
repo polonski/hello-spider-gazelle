@@ -17,13 +17,18 @@
 
     <table style="border: 1px solid black;">
         <tr style="border: 1px solid black;" align="center">
-            <td>ID</td><td>NAME</td><td>DESCRIPTION</td><td>ACTION</td>
+            <td>ID</td>
+            <td>NAME</td>
+            <td>DESCRIPTION</td>
+            <td>DONE?</td>
         </tr> 
        <%- all_tasks.each do |task| -%>  
        <tr style="border: 1px solid black;" align="left" >
-            <td><%= task.id %></td><td><%= task.name %></td><td><%= task.description %></td>
-            <td><form action="/tasks/<%= task.id %>" method="DELETE"><input type="submit" value="DELETE"></form>
-            <form action="/tasks/<%= task.id %>" method="PATCH"><input type="submit" value="DONE"></form></td>
+            <td><%= task.id %></td>
+            <td><%= task.name %></td>
+            <td><%= task.description %></td>
+            <td><%= task.done %></td>
+          
         </tr> 
         <%- end -%>
     </table>

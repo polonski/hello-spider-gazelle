@@ -77,8 +77,8 @@ logging = Proc(Signal, Nil).new do |signal|
   signal.ignore
 end
 
-#init DB
-Clear::SQL.init("postgres://dev:PlaceOS321@localhost/todo_tasks", 
+#init postgres DB
+pg_db = Clear::SQL.init("postgres://dev:PlaceOS321@localhost/todo_tasks", 
     connection_pool_size: 5)
 
 # Turn on DEBUG level logging `kill -s USR1 %PID`
