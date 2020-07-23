@@ -9,10 +9,24 @@ class Tasks < Application
     Log.debug { "GET /tasks" }
 
     tasks_title = "TO-DO-er"
-    all_tasks = Task.query.to_a
+    
+    begin  
 
-    respond_with do     
-      html template("tasks.ecr")
+      all_tasks = Task.query.to_a
+     #Clear::Migration::Manager.instance.apply_all
+     
+    rescue e
+
+        respond_with do 
+          json({error: " Could not read data. Message: #{e.message}"})
+        end
+
+    else
+        
+      respond_with do     
+        html template("tasks.ecr")
+      end
+
     end
 
   end
@@ -26,30 +40,38 @@ class Tasks < Application
       html template("new_task.ecr")
     end
 
-    # Clear::Migration::Manager.instance.apply_all
+    # 
 
   end
 
   def create
       
-      Log.debug { "POST /tasks#create" }
+    Log.debug { "POST /tasks#create" }
 
-      begin
-          Task.new({
-                    name: "#{params["name"]}", 
-                    description: "#{params["description"]}", 
-                    done: false  
-                    }).save!
-      rescue e
-         respond_with do 
-             json({error: "could not create new task. Message: #{e.message}"})
-          end
-      else
 
-        redirect_to Tasks.index()
-  
-      end
+    t = Task.new({
+              name: "#{params["name"]}", 
+              description: "#{params["description"]}", 
+              done: false  
+              })
+    
+    unless t.valid?
       
+      respond_with do
+
+        html template("create_error.ecr")
+      
+      end
+
+    else
+      
+      t.save!
+      
+      redirect_to Tasks.index()
+    
+    end
+
+
   
   end
 
@@ -66,7 +88,7 @@ class Tasks < Application
     rescue e
 
       respond_with do 
-        json({error: "could not delete task. Message: #{e.message}"})
+        json({error: " Could not delete task. Message: #{e.message}"})
       end
 
     else
@@ -84,19 +106,38 @@ class Tasks < Application
       Log.debug { "PATCH /tasks/:id >> /tasks#update" }
 
       #Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
+    
+    begin
 
       if params["done"]
+
         redirect_to Tasks.status_change(id: params["id"].to_i,done: params["done"])
+
+      else
+
+        Task.query.where{ id == params["id"] }.
+                to_update.set(name: Clear::SQL.unsafe(params["name"])).execute
+      
       end
 
-      Task.query.where{ id == params["id"] }.
-                to_update.set(name: Clear::SQL.unsafe(params["name"])).execute
+    rescue e
 
-     
+      respond_with do 
+        json({error: " Could not update task. Message: #{e.message}"})
+      end
+
+    else
+
       respond_with do 
         json({updated_task: params["id"]})
       end
-      
+
+    end
+  
+  end
+
+  def replace
+
   end
 
   def show
@@ -107,17 +148,29 @@ class Tasks < Application
   get "/:id/status", :status do
 
     Log.debug { "GET /:id/status >> /tasks#status(#{params.inspect})" }
+    begin
+      
+      task = Task.query.where{ id == params["id"] }
 
-    task = Task.query.where{ id == params["id"] }
+      s = false
 
-    s = false
+      task.each do |t|
+        s = t.done
+      end
 
-    task.each do |t|
-      s = t.done
-    end
 
-    respond_with do 
-        json({status: s})
+    rescue e
+
+      respond_with do 
+        json({error: " Could not update task. Message: #{e.message}"})
+      end
+
+    else
+
+      respond_with do 
+          json({status: s})
+      end
+
     end
 
   end
@@ -125,7 +178,7 @@ class Tasks < Application
 
 
 
-  post "/:id/status_change", :status_change do
+  get "/:id/status_change", :status_change do
 
     Log.debug { "PUT /:id/status_change >> /tasks#status_change(#{params.inspect})" }
 
