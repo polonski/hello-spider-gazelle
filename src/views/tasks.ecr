@@ -21,6 +21,7 @@
             <td>NAME</td>
             <td>DESCRIPTION</td>
             <td>DONE?</td>
+            <td>ACTION</td>
         </tr> 
        <%- all_tasks.each do |task| -%>  
        <tr style="border: 1px solid black;" align="left" >
@@ -28,6 +29,9 @@
             <td><%= task.name %></td>
             <td><%= task.description %></td>
             <td><%= task.done %></td>
+           <td><form action="/tasks/<%= task.id %>/delete/" method="GET"><input type="submit" value="DELETE"></form>
+            
+            <form action="/tasks/<%= task.id %>" method="GET"><input type="hidden" name="done" id="done" value="true"><input type="submit" value="DONE"></form></td>
           
         </tr> 
         <%- end -%>

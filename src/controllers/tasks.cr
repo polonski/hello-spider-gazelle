@@ -40,14 +40,11 @@ class Tasks < Application
       html template("new_task.ecr")
     end
 
-    # 
-
   end
 
   def create
       
     Log.debug { "POST /tasks#create" }
-
 
     t = Task.new({
               name: "#{params["name"]}", 
@@ -55,23 +52,18 @@ class Tasks < Application
               done: false  
               })
     
-    unless t.valid?
-      
-      respond_with do
-
-        html template("create_error.ecr")
-      
-      end
-
-    else
+    if t.valid?
       
       t.save!
-      
       redirect_to Tasks.index()
+
+    else
+
+      respond_with do
+        html template("create_error.ecr")
+      end
     
     end
-
-
   
   end
 
@@ -142,6 +134,11 @@ class Tasks < Application
 
   def show
 
+    Log.debug { "GET /tasks/:id >> /tasks#show" }
+    Log.debug { "/tasks#show params: #{params.inspect}" }
+    redirect_to Tasks.index()
+
+
   end
 
 
@@ -187,6 +184,19 @@ class Tasks < Application
 
 
     redirect_to Tasks.status(id: params["id"].to_i)
+
+  end
+
+
+  get "/:id/delete", :delete do
+
+    Log.debug { "GET /:id/delete >> /tasks#delete(#{params["id"]})" }
+
+    #Task.query.where{ id == params["id"] }.
+               # to_update.set(done: params["done"]).execute
+
+
+    redirect_to Tasks.destroy(id: params["id"].to_i)
 
   end
 
