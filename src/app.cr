@@ -1,6 +1,6 @@
 require "option_parser"
 require "./constants"
-require "clear"
+
 
 # Server defaults
 port = App::DEFAULT_PORT
@@ -77,8 +77,7 @@ logging = Proc(Signal, Nil).new do |signal|
   signal.ignore
 end
 
-#init postgres DB
-pg_db = Clear::SQL.init(App::POSTGRES_DATABASE, connection_pool_size: 5)
+
 
 # Turn on DEBUG level logging `kill -s USR1 %PID`
 # Default production log levels (INFO and above) `kill -s USR2 %PID`

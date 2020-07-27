@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create Error</title>
+    <link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<body style="text-align: center">
+    <img src="sg.png" alt="Spider-Gazelle" />
+     <br/>
+     TEH_ERRORZ
+    <br/> <br/>
+    
+    <% t.errors.each do |e| %>
+
+        <li>  Column:   <%= e.column %> , Reason:  <%= e.reason %>
+
+    <% end %>
+
+    <br/>  <br/>
+    
+    <form action="/tasks/new" method="GET">
+        <input type="submit" value="CREATE NEW TO-DO">
+    </form>
+   <br/>
+    <form action="/tasks" method="GET">
+        <input type="submit" value="VIEW ALL TO-DOs">
+    </form>
+
+</body>
+</html>

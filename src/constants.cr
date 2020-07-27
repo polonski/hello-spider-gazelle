@@ -19,7 +19,7 @@ module App
   COOKIE_SESSION_KEY    = ENV["COOKIE_SESSION_KEY"]? || "_spider_gazelle_"
   COOKIE_SESSION_SECRET = ENV["COOKIE_SESSION_SECRET"]? || "4f74c0b358d5bab4000dd3c75465dc2c"
 
-  POSTGRES_DATABASE     = "postgres://dev:PlaceOS321@localhost/todo_tasks"
+  POSTGRES_DATABASE = "postgres://dev:PlaceOS321@localhost/todo_tasks"
 
   def self.running_in_production?
     ENVIRONMENT == "production"

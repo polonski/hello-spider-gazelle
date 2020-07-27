@@ -19,10 +19,13 @@ describe Tasks do
     Task.query.to_a.size.should_not eq eq(0)
   end
 
-  it "each database record should be valid" do
+  it "in each database record should be valid" do
    
+      # run the clear validation for each database record 
       Task.query.to_a.each do |t| 
-        t.valid?.should be_true 
+        v = t.valid?
+        puts "record #{t.id} is valid = #{v}" 
+        v.should be_true
       end    
   end
 
