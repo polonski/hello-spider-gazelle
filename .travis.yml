@@ -2,7 +2,7 @@ language: crystal
 services:
   - postgresql
 before_script:
-  - psql -c 'todo_tasks database tasks;' -U postgres
+  - psql -c 'create database todo_tasks;' -U postgres
 env:
   - PG_DATABASE_URL=postgresql://postgres@localhost/todo_tasks
 install:
