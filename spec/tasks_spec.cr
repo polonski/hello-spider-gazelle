@@ -5,7 +5,8 @@ describe Tasks do
   # ==============
   #  Unit Testing
   # ==============
-   Clear::SQL.init(App::POSTGRES_DATABASE, connection_pool_size: 5)
+  Clear::SQL.init(ENV["PG_DATABASE_URL"], connection_pool_size: 5)
+  # Clear::SQL.init(App::POSTGRES_DATABASE, connection_pool_size: 5)
 
   it "should generate a date string" do
     # instantiate the controller you wish to unit test
@@ -21,12 +22,12 @@ describe Tasks do
 
   it "in each database record should be valid" do
    
-      # run the clear validation for each database record 
-      Task.query.to_a.each do |t| 
+      # run the clear validation for each database record
+      Task.query.to_a.each do |t|
         v = t.valid?
-        puts "record #{t.id} is valid = #{v}" 
+        puts "record #{t.id} is valid = #{v}"
         v.should be_true
-      end    
+      end
   end
 
   # ==============
