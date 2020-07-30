@@ -21,7 +21,7 @@ describe Tasks do
   end
 
   it "in each database record should be valid" do
-   
+  
       # run the clear validation for each database record
       Task.query.to_a.each do |t|
         v = t.valid?

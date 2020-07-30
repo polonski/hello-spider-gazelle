@@ -12,7 +12,7 @@ require "./models/*"
 # Server required after application controllers
 require "action-controller/server"
 
-# Clear ORM 
+# Clear ORM
 require "clear"
 require "./db/migrations/*"
 
