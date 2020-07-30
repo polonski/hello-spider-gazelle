@@ -29,7 +29,8 @@ Log.builder.bind "#{App::NAME}.*", log_level, App::LOG_BACKEND
 
 
 # init postgres DB
-Clear::SQL.init(App::POSTGRES_DATABASE, connection_pool_size: 5)
+Clear::SQL.init(ENV['PG_DATABASE_URL'], connection_pool_size: 5)
+#Clear::SQL.init(App::POSTGRES_DATABASE, connection_pool_size: 5)
 #Clear.logger.level = ::Logger::DEBUG
 
 # Filter out sensitive params that shouldn't be logged
