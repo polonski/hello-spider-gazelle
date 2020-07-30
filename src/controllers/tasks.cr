@@ -38,6 +38,7 @@ class Tasks < Application
       done:        false,
     })
 
+    # run validate method inside the clear model
     if t.valid?
       t.save!
       redirect_to Tasks.index
