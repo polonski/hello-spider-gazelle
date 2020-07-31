@@ -2,7 +2,7 @@ class Task
   include Clear::Migration
 
   def change(dir)
-    Log.debug { "DEBUG: migrations direction: #{dir}" }
+    Log.info { "INFO: migrations direction: #{dir}" }
 
     create_table(:tasks) do |t|
       t.column :name, :string
