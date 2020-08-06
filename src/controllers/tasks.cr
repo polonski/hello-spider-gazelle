@@ -71,16 +71,12 @@ class Tasks < Application
     Log.debug { "PATCH /tasks/:id >> /tasks#update" }
 
     # Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
-    
-    # build the update hash
-    update_this = Hash(String, String).new
-    {"name","description"}.each do |v|
-      update_this[v] = params[v] if params.has_key?(v)
-    end
-  
+
     begin
         Task.query.where { id == params["id"] }
-          .to_update.set(update_this).execute
+                  .to_update
+                  .set( Hash(String, String).from_json(request.body.as(IO)) )
+                  .execute
     rescue e
       respond_with do
         json({error: " Could not update task. Message: #{e.message}"})
