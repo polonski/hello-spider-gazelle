@@ -1,11 +1,15 @@
-language: crystal
-services:
-  - postgresql
-before_script:
-  - psql -c 'create database todo_tasks;' -U postgres
-env:
-  - PG_DATABASE_URL=postgresql://postgres@localhost/todo_tasks
-install:
-  - shards install
-script:
-  - crystal spec
+matrix:
+  include:
+    language: crystal
+    services:
+      - postgresql
+    before_script:
+      - psql -c 'create database todo_tasks;' -U postgres
+    env:
+      - PG_DATABASE_URL=postgresql://postgres@localhost/todo_tasks
+    install:
+      - shards install
+    script:
+      - shards build --production
+      - crystal spec
+        

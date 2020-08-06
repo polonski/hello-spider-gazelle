@@ -1,7 +1,6 @@
 require "option_parser"
 require "./constants"
 
-
 # Server defaults
 port = App::DEFAULT_PORT
 host = App::DEFAULT_HOST
@@ -76,8 +75,6 @@ logging = Proc(Signal, Nil).new do |signal|
   Log.builder.bind "#{App::NAME}.*", level, App::LOG_BACKEND
   signal.ignore
 end
-
-
 
 # Turn on DEBUG level logging `kill -s USR1 %PID`
 # Default production log levels (INFO and above) `kill -s USR2 %PID`

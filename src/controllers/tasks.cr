@@ -71,10 +71,16 @@ class Tasks < Application
     Log.debug { "PATCH /tasks/:id >> /tasks#update" }
 
     # Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
-
+    
+    # build the update hash
+    update_this = Hash(String, String).new
+    {"name","description"}.each do |v|
+      update_this[v] = params[v] if params.has_key?(v)
+    end
+  
     begin
         Task.query.where { id == params["id"] }
-          .to_update.set(name: Clear::SQL.unsafe(params["name"])).execute
+          .to_update.set(update_this).execute
     rescue e
       respond_with do
         json({error: " Could not update task. Message: #{e.message}"})
@@ -89,14 +95,15 @@ class Tasks < Application
   def replace
   end
 
-  def show
-    Log.debug { "GET /tasks/:id >> /tasks#show" }
-    Log.debug { "/tasks#show params: #{params.inspect}" }
-    redirect_to Tasks.index
+
+  patch "/:id/toggle_status", :status do
+    
   end
 
+
   get "/:id/status", :status do
-    Log.debug { "GET /:id/status >> /tasks#status(#{params.inspect})" }
+
+    Log.debug { "GET /:id/toggle_status >> /tasks#toggle_status(#{params.inspect})" }
     begin
       task = Task.query.where { id == params["id"] }
       s = false
@@ -105,9 +112,7 @@ class Tasks < Application
       end
 
     rescue e
-      respond_with do
-        json({error: " Could not fetch status. Message: #{e.message}"})
-      end
+      raise Exception.new "could not fetch task #{params["id"]}"
     else
       respond_with do
         json({status: s})
