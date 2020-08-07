@@ -27,4 +27,10 @@ abstract class Application < ActionController::Base
   def set_date_header
     response.headers["Date"] = HTTP.format_time(Time.utc)
   end
+
+  # resource not present
+  rescue_from Clear::SQL::RecordNotFoundError do |error|
+    Log.debug { error.message }
+    head :not_found
+  end
 end

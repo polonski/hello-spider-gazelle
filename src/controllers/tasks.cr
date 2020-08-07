@@ -3,6 +3,8 @@ require "clear"
 class Tasks < Application
   base "/tasks"
 
+  before_action :find_task
+
   def index
     Log.debug { "GET /tasks" }
     tasks_title = "TO-DO-er"
@@ -69,16 +71,14 @@ class Tasks < Application
     # Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
 
     begin
-      q = Task.query.where { id == params["id"] }
-      if q.count == 1
-        q.to_update
-          .set(Hash(String, String).from_json(request.body.as(IO)))
-          .execute
-      else
-        raise Clear::Model::Error.new("Task id #{params["id"]} not found. Update failed.")
-      end
-    rescue e
-      raise Exception.new(" Exception from PATCH /tasks/:id. Message: #{e.message}")
+      # put the request body inside a paired hash
+
+      Task.query.where { id == params["id"] }
+        .to_update
+        .set(Hash(String, String).from_json(request.body.as(IO)))
+        .execute
+    rescue e : Clear::Model::Error
+      raise e
     else
       respond_with do
         json({updated_task: params["id"]})
@@ -107,5 +107,9 @@ class Tasks < Application
         json({status: s})
       end
     end
+  end
+
+  def find_task
+    @task = Task.find!(params["id"])
   end
 end
