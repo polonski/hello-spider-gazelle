@@ -21,13 +21,12 @@ describe Tasks do
   end
 
   it "in each database record should be valid" do
-  
-      # run the clear validation for each database record
-      Task.query.to_a.each do |t|
-        v = t.valid?
-        puts "record #{t.id} is valid = #{v}"
-        v.should be_true
-      end
+    # run the clear validation for each database record
+    Task.query.to_a.each do |t|
+      v = t.valid?
+      puts "record #{t.id} is valid = #{v}"
+      v.should be_true
+    end
   end
 
   # ==============
@@ -36,8 +35,8 @@ describe Tasks do
   with_server do
     it "should tasks you" do
       result = curl("GET", "/tasks")
-     # result.body.includes?("TODOer").should eq(true)
-      #result.headers["Date"]?.nil?.should eq(false)
+      # result.body.includes?("TODOer").should eq(true)
+      # result.headers["Date"]?.nil?.should eq(false)
     end
   end
 end

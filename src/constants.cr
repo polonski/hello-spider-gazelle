@@ -10,7 +10,7 @@ module App
 
   ENVIRONMENT = ENV["SG_ENV"]? || "development"
 
-  ENV["PG_DATABASE_URL"]="postgresql://postgres:postgres@localhost/todo_tasks"
+  ENV["PG_DATABASE_URL"] = "postgresql://postgres:postgres@localhost/todo_tasks"
 
   DEFAULT_PORT          = (ENV["SG_SERVER_PORT"]? || 3000).to_i
   DEFAULT_HOST          = ENV["SG_SERVER_HOST"]? || "127.0.0.1"

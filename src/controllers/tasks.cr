@@ -11,9 +11,7 @@ class Tasks < Application
       # Clear::Migration::Manager.instance.apply_all
 
     rescue e
-      respond_with do
-        json({error: " Could not read data. Message: #{e.message}"})
-      end
+      raise Exception.new(" Exception from GET /tasks. Message: #{e.message}")
     else
       respond_with do
         html template("tasks.ecr")
@@ -57,9 +55,7 @@ class Tasks < Application
 
       Task.query.where { id == params["id"] }.to_delete.execute
     rescue e
-      respond_with do
-        json({error: " Could not delete task. Message: #{e.message}"})
-      end
+      raise Exception.new(" Exception from PATCH /tasks/:id. Message: #{e.message}")
     else
       respond_with do
         json({deleted_task: params["id"]})
@@ -73,14 +69,16 @@ class Tasks < Application
     # Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
 
     begin
-        Task.query.where { id == params["id"] }
-                  .to_update
-                  .set( Hash(String, String).from_json(request.body.as(IO)) )
-                  .execute
-    rescue e
-      respond_with do
-        json({error: " Could not update task. Message: #{e.message}"})
+      q = Task.query.where { id == params["id"] }
+      if q.count == 1
+        q.to_update
+          .set(Hash(String, String).from_json(request.body.as(IO)))
+          .execute
+      else
+        raise Clear::Model::Error.new("Task id #{params["id"]} not found. Update failed.")
       end
+    rescue e
+      raise Exception.new(" Exception from PATCH /tasks/:id. Message: #{e.message}")
     else
       respond_with do
         json({updated_task: params["id"]})
@@ -91,14 +89,10 @@ class Tasks < Application
   def replace
   end
 
-
   patch "/:id/toggle_status", :status do
-    
   end
 
-
   get "/:id/status", :status do
-
     Log.debug { "GET /:id/toggle_status >> /tasks#toggle_status(#{params.inspect})" }
     begin
       task = Task.query.where { id == params["id"] }
@@ -106,14 +100,12 @@ class Tasks < Application
       task.each do |t|
         s = t.done
       end
-
     rescue e
-      raise Exception.new "could not fetch task #{params["id"]}"
+      raise Exception.new(" Exception from GET /:id/toggle_status. Message: #{e.message}")
     else
       respond_with do
         json({status: s})
       end
     end
   end
-
 end
