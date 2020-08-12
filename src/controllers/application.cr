@@ -33,4 +33,10 @@ abstract class Application < ActionController::Base
     Log.debug { error.message }
     head :not_found
   end
+
+  # handle invalid model
+  rescue_from Clear::Model::InvalidError do |error|
+    Log.debug { error.message }
+    head :not_found
+  end
 end

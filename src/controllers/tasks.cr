@@ -2,7 +2,6 @@ require "clear"
 
 class Tasks < Application
   base "/tasks"
-
   before_action :find_task
 
   def index
@@ -10,8 +9,6 @@ class Tasks < Application
     tasks_title = "TO-DO-er"
     begin
       all_tasks = Task.query.to_a
-      # Clear::Migration::Manager.instance.apply_all
-
     rescue e
       raise Exception.new(" Exception from GET /tasks. Message: #{e.message}")
     else
@@ -71,22 +68,23 @@ class Tasks < Application
     # Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
 
     begin
-      # put the request body inside a paired hash
+      t : Task = Task.query.find({id: params["id"]}).as(Task)
 
-      Task.query.where { id == params["id"] }
-        .to_update
-        .set(Hash(String, String).from_json(request.body.as(IO)))
-        .execute
-    rescue e : Clear::Model::Error
+      Clear::SQL.transaction do
+        Hash(String, String).from_json(request.body.as(IO)).each do |k, v|
+          t.name = v if k == "name"
+          t.description = v if k == "description"
+        end
+
+        t.save! if t.valid?
+      end
+    rescue e
       raise e
     else
       respond_with do
         json({updated_task: params["id"]})
       end
     end
-  end
-
-  def replace
   end
 
   patch "/:id/toggle_status", :status do
@@ -110,6 +108,6 @@ class Tasks < Application
   end
 
   def find_task
-    @task = Task.find!(params["id"])
+    Task.find!(params["id"])
   end
 end
