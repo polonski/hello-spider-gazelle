@@ -6,7 +6,6 @@ describe Tasks do
   #  Unit Testing
   # ==============
   Clear::SQL.init(ENV["PG_DATABASE_URL"], connection_pool_size: 5)
-  # Clear::SQL.init(App::POSTGRES_DATABASE, connection_pool_size: 5)
 
   it "should generate a date string" do
     # instantiate the controller you wish to unit test
@@ -24,7 +23,7 @@ describe Tasks do
     # run the clear validation for each database record
     Task.query.to_a.each do |t|
       v = t.valid?
-      puts "record #{t.id} is valid = #{v}"
+      # puts "record #{t.id} is valid = #{v}"
       v.should be_true
     end
   end
@@ -36,7 +35,7 @@ describe Tasks do
     it "should tasks you" do
       result = curl("GET", "/tasks")
       # result.body.includes?("TODOer").should eq(true)
-      # result.headers["Date"]?.nil?.should eq(false)
+      result.headers["Date"]?.nil?.should eq(false)
     end
   end
 end

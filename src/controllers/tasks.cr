@@ -6,13 +6,15 @@ class Tasks < Application
 
   def index
     Log.debug { "GET /tasks" }
-    tasks_title = "TO-DO-er"
     begin
       all_tasks = Task.query.to_a
     rescue e
       raise Exception.new(" Exception from GET /tasks. Message: #{e.message}")
     else
+      #reference for travis
+      all_tasks
       respond_with do
+        
         html template("tasks.ecr")
       end
     end
