@@ -10,6 +10,12 @@ matrix:
     install:
       - shards install
     script:
-      - shards build --production
-      - crystal spec
+      # Spec
+      - crystal spec spec/**/*
+      # Format
+      - crystal tool format --check
+      # Lint
+      - ./bin/ameba
+      # Generate Documentation
+      - crystal docs
         
