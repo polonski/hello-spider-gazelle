@@ -6,6 +6,7 @@ class Tasks < Application
 
   def index
     Log.debug { "GET /tasks" }
+    tasks_title = "TO-DO-APP"
     begin
       all_tasks = Task.query.to_a
     rescue e
