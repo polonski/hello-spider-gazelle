@@ -11,7 +11,7 @@ matrix:
       - shards install
     script:
       # Spec
-      - crystal spec spec/**/*
+      - crystal spec
       # Format
       - crystal tool format --check
       # Lint
