@@ -8,7 +8,6 @@ class Tasks < Application
     Log.debug { "GET /tasks" }
     begin
       all_tasks = Task.query.to_a
-      all_tasks.dup
     rescue e
       raise Exception.new(" Exception from GET /tasks. Message: #{e.message}")
     else
