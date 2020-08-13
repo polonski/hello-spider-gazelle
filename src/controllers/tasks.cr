@@ -13,7 +13,6 @@ class Tasks < Application
       raise Exception.new(" Exception from GET /tasks. Message: #{e.message}")
     else
       respond_with do
-        
         html template("tasks.ecr")
       end
     end
