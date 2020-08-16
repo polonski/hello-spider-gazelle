@@ -35,6 +35,7 @@ describe Tasks do
     it "should tasks you" do
       result = curl("GET", "/tasks")
       #result.body.includes?("TO-DO-APP").should eq(true)
+      result.success?.should be_true
       result.headers["Date"]?.nil?.should eq(false)
     end
   end
