@@ -9,7 +9,7 @@ describe Tasks do
 
   it "should generate a date string" do
     # instantiate the controller you wish to unit test
-    tasks = Tasks.new(context("GET", "/tasks"))
+    tasks = Tasks.new(context("GET", "/"))
 
     # Test the instance methods of the controller
     tasks.set_date_header.should contain("GMT")
@@ -32,10 +32,16 @@ describe Tasks do
   # Test Responses
   # ==============
   with_server do
-    it "should tasks you" do
-      result = curl("GET", "/tasks")
-      result.success?.should be_true
+    it " should get date" do
+      result = curl("GET", "/")
+      # result.success?.should be_true
       result.headers["Date"]?.nil?.should eq(false)
+    end
+
+    it " should contain CORS headers" do
+      result = curl("GET", "/")
+      result.headers["Access-Control-Allow-Origin"]?.nil?.should eq(false)
+      result.headers["Access-Control-Allow-Headers"]?.nil?.should eq(false)
     end
   end
 end

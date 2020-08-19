@@ -1,25 +1,34 @@
 require "clear"
 
 class Tasks < Application
-  base "/tasks"
-  before_action :find_task
+  base "/"
+
+  options "/", :option_task do
+    response.headers["Access-Control-Allow-Methods"] = "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"
+  end
+
+  options "/:id", :option_task_id do
+    response.headers["Access-Control-Allow-Methods"] = "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"
+  end
+
+  # before_action :find_task
+  # getter task : Task?
 
   def index
-    Log.debug { "GET /tasks" }
-    tasks_title = "TO-DO-APP"
+    Log.debug { "GET /" }
+
+    # all_tasks=nil
     begin
-      all_tasks = Task.query.to_a
+      all_tasks = Task.query.select.to_a
     rescue e
       raise Exception.new(" Exception from GET /tasks. Message: #{e.message}")
     else
-      respond_with do
-        html template("tasks.ecr")
-      end
+      render text: all_tasks.to_json
     end
   end
 
   def new
-    Log.debug { "GET /tasks/new" }
+    Log.debug { "GET /new" }
 
     respond_with do
       html template("new_task.ecr")
@@ -27,27 +36,24 @@ class Tasks < Application
   end
 
   def create
-    Log.debug { "POST /tasks#create" }
+    Log.debug { "POST /#create" }
 
-    t = Task.new({
-      name:        "#{params["name"]}",
-      description: "#{params["description"]}",
-      done:        false,
-    })
-
+    #  t : Task? = Task.new(JSON.parse(request.body.as(IO)))
+    puts JSON.parse(request.body.as(IO))
     # run validate method inside the clear model
-    if t.valid?
-      t.save!
-      redirect_to Tasks.index
-    else
-      respond_with do
-        html template("create_error.ecr")
-      end
-    end
+    # if t.valid?
+    #  t.save!
+    render text: {title: "a todo"}.to_json
+    # redirect_to Tasks.index
+    # else
+    # respond_with do
+    # html template("create_error.ecr")
+    # end
+    # end
   end
 
   def destroy
-    Log.debug { "DELETE /tasks/:id" }
+    Log.debug { "DELETE /:id" }
 
     begin
       # Clear::SQL.execute("DELETE FROM tasks WHERE tasks.id=#{params["id"]};")
@@ -63,7 +69,7 @@ class Tasks < Application
   end
 
   def update
-    Log.debug { "PATCH /tasks/:id >> /tasks#update" }
+    Log.debug { "PATCH /:id >> /tasks#update" }
 
     # Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
 
@@ -72,8 +78,8 @@ class Tasks < Application
 
       Clear::SQL.transaction do
         Hash(String, String).from_json(request.body.as(IO)).each do |k, v|
-          t.name = v if k == "name"
-          t.description = v if k == "description"
+          # t.name = v if k == "name"
+          # t.description = v if k == "description"
         end
 
         t.save! if t.valid?
@@ -96,7 +102,7 @@ class Tasks < Application
       task = Task.query.where { id == params["id"] }
       s = false
       task.each do |t|
-        s = t.done
+        s = t.completed
       end
     rescue e
       raise Exception.new(" Exception from GET /:id/toggle_status. Message: #{e.message}")
