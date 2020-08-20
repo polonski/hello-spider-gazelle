@@ -55,7 +55,6 @@ class Tasks < Application
   def destroy
     d = Task.query.select({id: params["id"]}).to_delete.execute
 
-    raise
     render text: ""
   end
 
