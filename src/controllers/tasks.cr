@@ -3,11 +3,11 @@ require "clear"
 class Tasks < Application
   base "/"
 
-  options "/", :option_task do
+  options "/" do
     response.headers["Access-Control-Allow-Methods"] = "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"
   end
 
-  options "/:id", :option_task_id do
+  options "/:id" do
     response.headers["Access-Control-Allow-Methods"] = "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"
   end
 
@@ -15,105 +15,61 @@ class Tasks < Application
   # getter task : Task?
 
   def index
-    Log.debug { "GET /" }
-
     # all_tasks=nil
     begin
       all_tasks = Task.query.select.to_a
-    rescue e
-      raise Exception.new(" Exception from GET /tasks. Message: #{e.message}")
-    else
       render text: all_tasks.to_json
+    rescue e
+      raise e
     end
   end
 
-  def new
-    Log.debug { "GET /new" }
+  def show
+    t : Task = Task.query.find({id: params["id"]}).as(Task)
 
-    respond_with do
-      html template("new_task.ecr")
-    end
+    render text: t.to_json
   end
 
   def create
-    Log.debug { "POST /#create" }
+    # for some reason if this hash is not passed into a variable
+    # and directly placed inside Task.new() , it gived this err:
+    # Unexpected token: <EOF> at 1:1 (JSON::ParseException)
+    h = JSON.parse(request.body.as(IO))
 
-    #  t : Task? = Task.new(JSON.parse(request.body.as(IO)))
-    puts JSON.parse(request.body.as(IO))
-    # run validate method inside the clear model
-    # if t.valid?
-    #  t.save!
-    render text: {title: "a todo"}.to_json
-    # redirect_to Tasks.index
-    # else
-    # respond_with do
-    # html template("create_error.ecr")
-    # end
-    # end
+    t : Task? = Task.new(h)
+
+    t.save
+    t.url = "https://#{request.headers["host"]}/#{t.id}"
+
+    # runs model validate and produces Clear::Model::InvalidError if not valid
+    t.save!
+
+    render text: t.to_json
+  end
+
+  delete "/" do
+    # wrath of god
+    render text: Task.query.select.to_delete.execute
   end
 
   def destroy
-    Log.debug { "DELETE /:id" }
+    d = Task.query.select({id: params["id"]}).to_delete.execute
 
-    begin
-      # Clear::SQL.execute("DELETE FROM tasks WHERE tasks.id=#{params["id"]};")
-
-      Task.query.where { id == params["id"] }.to_delete.execute
-    rescue e
-      raise Exception.new(" Exception from PATCH /tasks/:id. Message: #{e.message}")
-    else
-      respond_with do
-        json({deleted_task: params["id"]})
-      end
-    end
+    raise
+    render text: ""
   end
 
   def update
-    Log.debug { "PATCH /:id >> /tasks#update" }
+    t : Task = Task.query.find({id: params["id"]}).as(Task)
 
-    # Clear::SQL.execute("UPDATE tasks SET tasks.name=#{params["name"]} tasks.description=#{params["description"]} tasks.done=#{params["done"]} WHERE tasks.id=#{params["id"]};")
+    h = JSON.parse(request.body.as(IO)).as_h
 
-    begin
-      t : Task = Task.query.find({id: params["id"]}).as(Task)
+    t.title = h["title"].to_s if h.has_key?("title")
+    t.order = h["order"].to_s.to_i if h.has_key?("order")
 
-      Clear::SQL.transaction do
-        Hash(String, String).from_json(request.body.as(IO)).each do |k, v|
-          # t.name = v if k == "name"
-          # t.description = v if k == "description"
-        end
+    t.completed = true if h.has_key?("completed")
+    t.save!
 
-        t.save! if t.valid?
-      end
-    rescue e
-      raise e
-    else
-      respond_with do
-        json({updated_task: params["id"]})
-      end
-    end
-  end
-
-  patch "/:id/toggle_status", :status do
-  end
-
-  get "/:id/status", :status do
-    Log.debug { "GET /:id/toggle_status >> /tasks#toggle_status(#{params.inspect})" }
-    begin
-      task = Task.query.where { id == params["id"] }
-      s = false
-      task.each do |t|
-        s = t.completed
-      end
-    rescue e
-      raise Exception.new(" Exception from GET /:id/toggle_status. Message: #{e.message}")
-    else
-      respond_with do
-        json({status: s})
-      end
-    end
-  end
-
-  def find_task
-    Task.find!(params["id"])
+    render text: t.to_json
   end
 end

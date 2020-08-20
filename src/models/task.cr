@@ -8,28 +8,26 @@ class Task
 
   column id : Int32, primary: true, presence: false
 
-  column title : String, column_name: "title"
-  column completed : Bool?, column_name: "completed"
-  column order : Int32?, column_name: "order"
-  column url : String?, column_name: "url"
+  column title : String
+  column order : Int32?
+  column url : String?
+  column completed : Bool?
 
   self.table = "tasks"
 
   def validate
-    #   if !description_column.nil?
-    #
-    #
-    #     if description.size < 10
-    #       add_error("description", "must contains at least 10 characters")
-    #     end
-    #
-    #   end
-    #   if !name_column.nil?
-    #
-    #     if name.size < 2
-    #       add_error("name", "must contains at least 3 characters")
-    #     end
+    if !title.nil?
+      if title.size < 4
+        add_error("title", "must contains at least 5 characters")
+      end
+      #
+      #   end
+      #   if !name_column.nil?
+      #
+      #     if name.size < 2
+      #       add_error("name", "must contains at least 3 characters")
+      #     end
 
-    #  end
+    end
   end
 end
