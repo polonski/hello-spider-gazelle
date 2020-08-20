@@ -7,6 +7,7 @@ abstract class Application < ActionController::Base
 
   before_action :set_request_id
   before_action :set_date_header
+  before_action :set_cors_headers
 
   # This makes it simple to match client requests with server side logs.
   # When building microservices this ID should be propagated to upstream services.
@@ -28,14 +29,28 @@ abstract class Application < ActionController::Base
     response.headers["Date"] = HTTP.format_time(Time.utc)
   end
 
+  def set_cors_headers
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+  end
+
   # resource not present
   rescue_from Clear::SQL::RecordNotFoundError do |error|
+    puts "~~~~~~~~~~~~~~~~~~~~~Clear::SQL::RecordNotFoundError"
     Log.debug { error.message }
     head :not_found
   end
 
   # handle invalid model
   rescue_from Clear::Model::InvalidError do |error|
+    puts "~~~~~~~~~~~~~~~~~~~~~Clear::Model::InvalidError"
+    Log.debug { error.message }
+    head :not_found
+  end
+
+  # handle invalid model
+  rescue_from Clear::Model::Error do |error|
+    puts "~~~~~~~~~~~~~~~~~~~~~Clear::Model::Error"
     Log.debug { error.message }
     head :not_found
   end
