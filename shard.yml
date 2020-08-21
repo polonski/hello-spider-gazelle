@@ -10,7 +10,7 @@ dependencies:
     version: "~> 3.0"
   active-model:
     github: spider-gazelle/active-model
-    version: ~> 1.0.0
+   
 
   # Extends ENV to read values injected by docker and kubernetes secrets
   secrets-env:
