@@ -1,11 +1,16 @@
 name: hello-spider-gazelle
 version: 1.0.0
+authors:
+  - Michał Połoński <michal@place.technology>
+crystal: 0.35.1
+license: MIT
 dependencies:
   action-controller:
     github: spider-gazelle/action-controller
     version: "~> 3.0"
   active-model:
     github: spider-gazelle/active-model
+    version: ~> 1.0.0
 
   # Extends ENV to read values injected by docker and kubernetes secrets
   secrets-env:
