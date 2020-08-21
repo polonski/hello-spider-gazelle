@@ -65,6 +65,5 @@ ActionController::Session.configure do |settings|
   settings.secure = App.running_in_production?
 
   # run migrations
-  puts "!!!!!!apply runnin g migrations"
   Clear::Migration::Manager.instance.apply_all
 end
