@@ -1,4 +1,4 @@
-name: spider-gazelle
+name: hello-spider-gazelle
 version: 1.0.0
 dependencies:
   action-controller:
@@ -26,7 +26,5 @@ development_dependencies:
 
 # compile target
 targets:
-  app:
-    main: src/app.cr
   heroku:
     main: src/app.cr
