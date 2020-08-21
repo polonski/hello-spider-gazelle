@@ -19,6 +19,8 @@ Detailed documentation and guides available: https://spider-gazelle.net/
   * Cookies
   * Headers
   * Params etc
+* Usng [Clear ORM](https://clear.gitbook.io/) for model handling.
+* Using Postgres Database
 
 Spider-Gazelle builds on the amazing performance of **router.cr** [here](https://github.com/tbrand/which_is_the_fastest).:rocket:
 
