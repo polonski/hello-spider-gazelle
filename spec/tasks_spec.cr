@@ -5,7 +5,7 @@ describe Tasks do
   # ==============
   #  Unit Testing
   # ==============
-  db_url = ENV["DATABASE_URL"].nil? ? ENV["DATABASE_URL"] : ENV["PG_DATABASE_URL"]
+  db_url = ENV.has_key?("DATABASE_URL") ? ENV["DATABASE_URL"] : ENV["PG_DATABASE_URL"]
   Clear::SQL.init(db_url, connection_pool_size: 5)
 
   it "should generate a date string" do
