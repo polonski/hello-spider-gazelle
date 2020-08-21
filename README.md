@@ -1,4 +1,4 @@
-# Spider-Gazelle Application Template
+# Spider-Gazelle To-Do Application
 
 [![Build Status](https://travis-ci.com/polonski/hello-spider-gazelle.svg?branch=master)](https://travis-ci.com/polonski/hello-spider-gazelle)
 
@@ -20,7 +20,6 @@ Detailed documentation and guides available: https://spider-gazelle.net/
   * Headers
   * Params etc
 
-
 Spider-Gazelle builds on the amazing performance of **router.cr** [here](https://github.com/tbrand/which_is_the_fastest).:rocket:
 
 
@@ -29,6 +28,7 @@ Spider-Gazelle builds on the amazing performance of **router.cr** [here](https:/
 `crystal spec`
 
 * to run in development mode `crystal ./src/app.cr`
+* passes tests from [ToDoBackend](http://todobackend.com/specs/index.html)
 
 ## Compiling
 
