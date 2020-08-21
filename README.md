@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.com/polonski/hello-spider-gazelle.svg?branch=master)](https://travis-ci.com/polonski/hello-spider-gazelle)
 
+Auto-building as [Heroku app](https://todobackend-crystal.herokuapp.com/) 
+
 Clone this repository to start building your own spider-gazelle based application
 
 ## Documentation
@@ -30,7 +32,7 @@ Spider-Gazelle builds on the amazing performance of **router.cr** [here](https:/
 `crystal spec`
 
 * to run in development mode `crystal ./src/app.cr`
-* passes tests from [ToDoBackend](http://todobackend.com/specs/index.html)
+* passes tests from [ToDoBackend](http://todobackend.com/specs/index.html?https://todobackend-crystal.herokuapp.com/)
 
 ## Compiling
 
