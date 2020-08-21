@@ -36,21 +36,18 @@ abstract class Application < ActionController::Base
 
   # resource not present
   rescue_from Clear::SQL::RecordNotFoundError do |error|
-    puts "~~~~~~~~~~~~~~~~~~~~~Clear::SQL::RecordNotFoundError"
     Log.debug { error.message }
     head :not_found
   end
 
   # handle invalid model
   rescue_from Clear::Model::InvalidError do |error|
-    puts "~~~~~~~~~~~~~~~~~~~~~Clear::Model::InvalidError"
     Log.debug { error.message }
     head :not_found
   end
 
   # handle invalid model
   rescue_from Clear::Model::Error do |error|
-    puts "~~~~~~~~~~~~~~~~~~~~~Clear::Model::Error"
     Log.debug { error.message }
     head :not_found
   end
