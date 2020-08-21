@@ -25,6 +25,7 @@ RUN adduser \
     "${USER}"
 
 # Build App
+RUN shards update
 RUN shards build --error-trace --production
 
 # Extract dependencies
