@@ -28,7 +28,8 @@ Log.builder.bind "action-controller.*", log_level, App::LOG_BACKEND
 Log.builder.bind "#{App::NAME}.*", log_level, App::LOG_BACKEND
 
 # init postgres DB
-Clear::SQL.init(ENV["DATABASE_URL"], connection_pool_size: 5)
+db_url = ENV["DATABASE_URL"].nil? ? ENV["DATABASE_URL"] : ENV["PG_DATABASE_URL"]
+Clear::SQL.init(db_url, connection_pool_size: 5)
 #Clear::SQL.init(ENV["PG_DATABASE_URL"], connection_pool_size: 5)
 # Clear::SQL.init(App::POSTGRES_DATABASE, connection_pool_size: 5)
 # Clear.logger.level = ::Logger::DEBUG

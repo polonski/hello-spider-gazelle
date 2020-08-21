@@ -5,7 +5,8 @@ describe Tasks do
   # ==============
   #  Unit Testing
   # ==============
-  Clear::SQL.init(ENV["PG_DATABASE_URL"], connection_pool_size: 5)
+  db_url = ENV["DATABASE_URL"].nil? ? ENV["DATABASE_URL"] : ENV["PG_DATABASE_URL"]
+  Clear::SQL.init(db_url, connection_pool_size: 5)
 
   it "should generate a date string" do
     # instantiate the controller you wish to unit test
