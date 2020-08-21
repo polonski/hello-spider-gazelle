@@ -18,6 +18,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: shards install
+      run: shards update
     - name: Build produsction version
       run: shards build --production
     - name: Run tests
